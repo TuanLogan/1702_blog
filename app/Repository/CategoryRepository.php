@@ -6,13 +6,24 @@ use Illuminate\Http\Request;
 use DB;
 class CategoryRepository
 {
-	public static function GetAll(){
+	public static function GetAll(Request $request){
 		Log::info('BEGIN ' 
 			. get_class() . ' => ' . __FUNCTION__ . '()');
 
-		Log::info('END ' 
+		if($request->input('keyword') != "" || $request->input('pageSize') != ""){
+			$keyword = $request->input('keyword');
+			$pageSize = $request->input('pageSize');
+
+			$cateList = Category::where('cate_name', 'like', "%$keyword%")->paginate($pageSize)->withPath("?keyword=$keyword&pageSize=$pageSize");
+
+			Log::info('END ' 
 			. get_class() . ' => ' . __FUNCTION__ . '()');
-		return Category::all();
+			return $cateList;
+		}else{
+			Log::info('END ' 
+			. get_class() . ' => ' . __FUNCTION__ . '()');
+			return Category::paginate(20);
+		}
 	}
 
 	public static function Save(Request $request){
