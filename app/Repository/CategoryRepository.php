@@ -22,7 +22,9 @@ class CategoryRepository
 		}else{
 			Log::info('END ' 
 			. get_class() . ' => ' . __FUNCTION__ . '()');
-			return Category::paginate(20);
+			$cateList = Category::paginate(20);
+			return $cateList;
+			
 		}
 	}
 

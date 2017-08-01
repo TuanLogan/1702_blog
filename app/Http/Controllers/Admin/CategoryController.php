@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Log;
+use Validator;
 use App\Repository\CategoryRepository;
 use App\Models\Category;
+use App\Http\Requests\SaveCategoryRequest;
 class CategoryController extends Controller
 {
     /**
@@ -38,8 +40,26 @@ class CategoryController extends Controller
 
         // lấy ra model mẫu
         $model = new Category();
-        $listCate = CategoryRepository::GetAll();
+        $listCate = Category::all();
+        $listCate = get_options($listCate);
 
+        Log::info("END " . get_class() . " => " . __FUNCTION__ ."()");
+        return view('admin.cate.form', compact('model', 'listCate'));
+    }
+
+    /**
+     * Form cập nhật danh mục
+     * @author ThienTH
+     * @return view
+     * @date 2017-07-28 - create new
+     */
+    public function update($id){
+        Log::info("BEGIN " . get_class() . " => " . __FUNCTION__ ."()");
+
+        // lấy ra model mẫu
+        $model = Category::find($id);
+        $listCate = Category::all();
+        $listCate = get_options($listCate);
 
         Log::info("END " . get_class() . " => " . __FUNCTION__ ."()");
         return view('admin.cate.form', compact('model', 'listCate'));
@@ -51,9 +71,9 @@ class CategoryController extends Controller
      * @return view
      * @date 2017-07-21 - create new
      */
-    public function save(Request $rq){
+    public function save(SaveCategoryRequest $rq){
         Log::info("BEGIN " . get_class() . " => " . __FUNCTION__ ."()");
-
+        
         $result = CategoryRepository::Save($rq);
         
         Log::info("END " . get_class() . " => " . __FUNCTION__ ."()");

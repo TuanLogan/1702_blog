@@ -7,17 +7,23 @@
 			<input type="hidden" name="id" value="{{$model->id}}">
 			<div class="form-group">
 				<label for="cate-name">Category name</label>
-				<input id="cate-name" type="text" value="{{$model->cate_name}}" name="cate_name" class="form-control" placeholder="Category name">
+				<input id="cate-name" type="text" 
+					value="{{old('cate_name', $model->cate_name)}}" name="cate_name" class="form-control" placeholder="Category name">
+				@if (count($errors) > 0)
+					<span class="text-danger">{{$errors->first('cate_name')}}</span>
+				@endif
 			</div>
 			<div class="form-group">
 				<label for="cate-parent">Parent</label>
 				<select name="parent_id" class="form-control">
-					@foreach ($listCate as $element)
+					<option value="0">--------------</option>
+					@foreach ($listCate as $key => $value)
 						@php
-							$selected = $model->parent_id == $element->id ? "selected" : null;
+							$key = str_replace("x", "", $key);
+							$selected = $model->parent_id == $key ? "selected" : null;
 						@endphp
 
-						<option value="{{$element->id}}" {{$selected}}>{{$element->cate_name}}</option>
+						<option value="{{$key}}" {{$selected}}>{{$value}}</option>
 					@endforeach
 				</select>
 			</div>
