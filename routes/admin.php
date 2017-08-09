@@ -28,6 +28,22 @@ Route::group(['middleware' => 'auth'], function(){
 
 		Route::get('category/remove/{id}', 
 			'Admin\CategoryController@remove')->name('cate.remove');
+
+		Route::get('post', 
+			'Admin\PostController@index')->name('post.list');
+
+		Route::get('post/remove/{id}', 
+			'Admin\PostController@remove')->name('post.remove');
+
+		Route::get('post/create', 
+			'Admin\PostController@create')->name('post.create');
+		
+		Route::post('post/save', 
+			'Admin\PostController@save')->name('post.save');
+
+		Route::get('post/edit/{id}', 
+			'Admin\PostController@update')->name('post.update');
+
 	});
 	
 });
