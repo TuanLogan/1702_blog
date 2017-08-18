@@ -1,14 +1,34 @@
 <?php 
+use Illuminate\Http\Request;
 /**
  * Dashboard
  */
-
-
+Route::get('/check-url/{entityType}/{entityId}/{slug}', function($entityType, $entityId, $slug){
+	$result = \App\Models\Slug::checkSlugExisted($entityType, $entityId, $slug);
+	return response()->json($result);
+});
+Route::get('/generate-slug', function(Request $request){
+	$slug = str_slug(trim($request->title), '-');
+	$slug .= "-" . date('YmdHis', time());
+	return response()->json(['data' => $slug]);
+})->name('slug.generate');
 Route::group(['middleware' => 'auth'], function(){
 	
 	Route::get('/', function(){
-		return view('admin.dashboard');
-	});
+		$cateCount = App\Models\Category::count();
+		$postCount = App\Models\Post::count();
+		return view('admin.dashboard', compact('cateCount', 'postCount'));
+	})->name('admin');
+
+	Route::get('/change-password', 'Admin\ProfileController@changePwdForm')->name('password.change');
+	
+	Route::post('/change-password', 'Admin\ProfileController@saveChangePwd');
+
+	/**
+	 * Profile
+	 */
+	Route::get('/profile', 'Admin\ProfileController@update')->name('profile.form');
+	Route::post('/profile', 'Admin\ProfileController@save');
 
 	/**
 	 * Category management
